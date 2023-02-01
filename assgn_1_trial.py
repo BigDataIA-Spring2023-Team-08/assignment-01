@@ -238,9 +238,18 @@ def goes_main():
 
 
 def map_main():
-    st.title("Map Page")
+    # st.title("Map Page")
+    st.markdown(
+        """
+        <h1 style="background-color:#1c1c1c; color: white; text-align: center; padding: 15px; border-radius: 10px">
+            Map Page
+        </h1>
+        """,
+        unsafe_allow_html=True,
+    )
+
     map_data = scraper_mapdata.get_map_data()
-    st.plotly_chart(map_data, use_container_width=True)
+    st.plotly_chart(map_data, use_container_width=True, height=700)
 
 
 if __name__ == "__main__":

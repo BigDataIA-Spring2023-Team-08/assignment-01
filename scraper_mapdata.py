@@ -6,15 +6,16 @@ import logging
 from dotenv import load_dotenv
 import plotly.graph_objects as go
 
-def get_map_data():
-    load_dotenv()
-    LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
-    logging.basicConfig(
-        format='%(asctime)s %(levelname)-8s %(message)s',
-        level=LOGLEVEL,
-        datefmt='%Y-%m-%d %H:%M:%S',
-        filename='logs.log')
+#load env variables and change logging level to info
+load_dotenv()
+LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=LOGLEVEL,
+    datefmt='%Y-%m-%d %H:%M:%S',
+    filename='logs.log')
 
+def get_map_data():
     #url used to scrape NEXRAD satellite location data to plot on map
     url = "https://www.ncei.noaa.gov/access/homr/file/nexrad-stations.txt"
     #recording the response from the webpage
@@ -99,4 +100,5 @@ def get_map_data():
             },
             autosize= True
         )
+    fig.update_layout(height=700)
     return fig
