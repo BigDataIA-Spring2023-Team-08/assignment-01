@@ -248,7 +248,7 @@ def map_main():
         unsafe_allow_html=True,
     )
 
-    map_data = scraper_mapdata.get_map_data()
+    map_data = scraper_mapdata.plot_nexrad_locations()
     st.plotly_chart(map_data, use_container_width=True, height=700)
 
 
