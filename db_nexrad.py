@@ -16,14 +16,14 @@ print("File path", database_file_path)
 
 ddl_file_name = 'nexrad.sql'
 ddl_file_path = os.path.join(os.path.dirname(__file__),ddl_file_name)
-df = pd.read_csv("scrapped_nexrad_df.csv")
+data_nexrad = pd.read_csv("scrapped_nexrad_df.csv")
 table_name = 'nexrad'
 
 def create_database():
     with open(ddl_file_path, 'r') as sql_file:
         sql_script = sql_file.read()
     db = sqlite3.connect(database_file_path)
-    df.to_sql(table_name,db,if_exists='replace',index=False)
+    data_nexrad.to_sql(table_name,db,if_exists='replace',index=False) 
 
     cursor = db.cursor()
     cursor.executescript(sql_script)
@@ -41,8 +41,8 @@ def check_database_initilization():
 
 def query_into_dataframe():
     db = sqlite3.connect(database_file_path)
-    df1 = pd.read_sql_query("SELECT * FROM nexrad", db)
-    logging.info(df1)
+    df_query = pd.read_sql_query("SELECT * FROM nexrad", db)
+    logging.info(df_query)
 
 def main():
     check_database_initilization()
