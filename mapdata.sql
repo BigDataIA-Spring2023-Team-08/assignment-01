@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS mapdata(id number, state text, county text, latitude text, longitude text, elevation text);
