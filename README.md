@@ -7,11 +7,11 @@
 
 ## Index
   - [Abstract 📝](#abstract-)
-  - [Data Sources](#data-sources-)
-  - [Streamlit](#streamlit-)
-  - [S3 🎬](#s3-)
-  - [SQLite DB 💻](#sqlite-db-)
-  - [Unit Testing](#unit-testing-️)
+  - [Data Sources 💽](#data-sources-)
+  - [Streamlit 🖥️](#streamlit-)
+  - [S3 🧊](#s3-)
+  - [SQLite DB 🛢](#sqlite-db-)
+  - [Unit Testing ⚒️](#unit-testing-️)
 
 
 
