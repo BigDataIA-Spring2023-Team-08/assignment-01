@@ -31,7 +31,9 @@ The National Oceanic and Atmospheric Administration (NOAA) is a government agenc
 The data exploration tool for the Geospatial startup uses the Python library Streamlit for its user interface. The tool offers a user-friendly experience with three distinct pages, each dedicated to NexRad, GOES, and NexRad location maps. On each page, users can choose between downloading satellite data based on filename or specific field criteria. The UI then displays a download link to the S3 bucket, enabling users to successfully retrieve the desired satellite images.
 
 
-
+> WE ATTEST THAT WE HAVEN’T USED ANY OTHER STUDENTS’ WORK IN OUR ASSIGNMENT AND ABIDE BY THE POLICIES LISTED IN THE STUDENT HANDBOOK.
+> 
+> Vraj: 25%, Poojitha: 25%, Merwin: 25%, Anushka: 25%
 
 
 
