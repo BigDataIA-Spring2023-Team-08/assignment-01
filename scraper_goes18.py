@@ -1,17 +1,11 @@
 import os
 import boto3
-import logging
-from dotenv import load_dotenv
+import time
 import pandas as pd
+from dotenv import load_dotenv
 
 #load env variables and change logging level to info
 load_dotenv()
-LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
-logging.basicConfig(
-    format='%(asctime)s %(levelname)-8s %(message)s',
-    level=LOGLEVEL,
-    datefmt='%Y-%m-%d %H:%M:%S',
-    filename='logs.log')
 
 #authenticate S3 client with your user credentials that are stored in your .env config file
 s3client = boto3.client('s3',
@@ -20,8 +14,15 @@ s3client = boto3.client('s3',
                         aws_secret_access_key = os.environ.get('AWS_SECRET_KEY')
                         )
 
-#intialise dictionary to store scrapped data before moving it to a sqllite table
-scrapped_goes18_dict = {
+#authenticate S3 client for logging with your user credentials that are stored in your .env config file
+clientLogs = boto3.client('logs',
+                        region_name='us-east-1',
+                        aws_access_key_id = os.environ.get('AWS_LOG_ACCESS_KEY'),
+                        aws_secret_access_key = os.environ.get('AWS_LOG_SECRET_KEY')
+                        )
+
+#intialise dictionary to store scraped data before moving it to a sqllite table
+scraped_goes18_dict = {
     'id': [],
     'product': [],
     'year': [],
@@ -30,10 +31,36 @@ scrapped_goes18_dict = {
 }
 
 def scrape_goes18_data():
+
+    """USed to scrape  n and mfgyear as input to give registration details of planes manufactured in the entered year, 
+    The value of n specifies whether the data required is for surveillance or non surveillance planes 
+    n=0 means data for surveillance planes and n=1 indicates data for non surveillance planes.
+    ----------
+    year : int
+        the manufactured year
+    Returns
+    -------
+    json
+        1.  Records of flight registration details
+        2.  if entered year doesn't return any value or data related to that year does not exists the merely prints the years of which data is available from
+            which the user can choose and enter appropriately.
+    """
+    
+    clientLogs.put_log_events(      #logging to AWS CloudWatch logs
+        logGroupName = "assignment01-logs",
+        logStreamName = "db-logs",
+        logEvents = [
+            {
+            'timestamp' : int(time.time() * 1e3),
+            'message' : "Scraping data from GOES18 bucket"
+            }
+        ]
+    )
+
     id=1    #for storing as primary key in db
-    logging.info("Scrapping data from GOES18 bucket")
-    prefix = "ABI-L1b-RadC/"    #replace this with user input from streamlit UI with / in end
+    prefix = "ABI-L1b-RadC/"    #just one product to consider as per scope of assignment
     result = s3client.list_objects(Bucket=os.environ.get('GOES18_BUCKET_NAME'), Prefix=prefix, Delimiter='/')
+
     #traversing into each subfolder and store the folder names within each
     for o in result.get('CommonPrefixes'):
         path = o.get('Prefix').split('/')
@@ -46,21 +73,29 @@ def scrape_goes18_data():
             for q in sub_sub_folder.get('CommonPrefixes'):
                 sub_sub_path = q.get('Prefix').split('/')
                 sub_sub_path = sub_sub_path[:-1]    #remove the filename from the path
-                scrapped_goes18_dict['id'].append(id)   #map all scrapped data into the dict
-                scrapped_goes18_dict['product'].append(sub_sub_path[0])
-                scrapped_goes18_dict['year'].append(sub_sub_path[1])
-                scrapped_goes18_dict['day'].append(sub_sub_path[2])
-                scrapped_goes18_dict['hour'].append(sub_sub_path[3])
+                scraped_goes18_dict['id'].append(id)   #map all scraped data into the dict
+                scraped_goes18_dict['product'].append(sub_sub_path[0])
+                scraped_goes18_dict['year'].append(sub_sub_path[1])
+                scraped_goes18_dict['day'].append(sub_sub_path[2])
+                scraped_goes18_dict['hour'].append(sub_sub_path[3])
                 id+=1
 
-    logging.info("Data scrapped successfully")       
-    scrapped_goes18_df = pd.DataFrame(scrapped_goes18_dict) #final scrapped metadata stored in dataframe
-    return scrapped_goes18_df
+    clientLogs.put_log_events(      #logging to AWS CloudWatch logs
+        logGroupName = "assignment01-logs",
+        logStreamName = "db-logs",
+        logEvents = [
+            {
+            'timestamp' : int(time.time() * 1e3),
+            'message' : "Data scraped successfully"
+            }
+        ]
+    )
+      
+    scraped_goes18_df = pd.DataFrame(scraped_goes18_dict)     #final scraped metadata stored in dataframe
+    return scraped_goes18_df
 
 def main():
     metadata_goes18 = scrape_goes18_data()
 
 if __name__ == "__main__":
-    logging.info("GOES18 scraper script starts")
     main()
-    logging.info("GOES18 scraper script ends")
