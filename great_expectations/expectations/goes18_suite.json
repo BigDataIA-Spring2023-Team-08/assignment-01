@@ -5,8 +5,8 @@
     {
       "expectation_type": "expect_table_row_count_to_be_between",
       "kwargs": {
-        "max_value": 4426,
-        "min_value": 1
+        "max_value": 10000,
+        "min_value": 0
       },
       "meta": {
         "profiler_details": {
@@ -16,6 +16,24 @@
             "metric_value_kwargs": null
           },
           "num_batches": 1
+        }
+      }
+    },
+    {
+      "expectation_type": "expect_table_columns_to_match_set",
+      "kwargs": {
+        "column_set": [
+          "day",
+          "id",
+          "hour",
+          "product",
+          "year",
+          "Unnamed: 0"
+        ]
+      },
+      "meta": {
+        "profiler_details": {
+          "success_ratio": 1.0
         }
       }
     },
@@ -131,7 +149,7 @@
       "expectation_type": "expect_column_values_to_be_between",
       "kwargs": {
         "column": "id",
-        "max_value": 4426,
+        "max_value": 10000,
         "min_value": 1,
         "mostly": 1.0,
         "strict_max": false,
@@ -268,6 +286,31 @@
       }
     },
     {
+      "expectation_type": "expect_column_values_to_match_regex",
+      "kwargs": {
+        "column": "product",
+        "mostly": 1.0,
+        "regex": "-?\\d+"
+      },
+      "meta": {
+        "profiler_details": {
+          "evaluated_regexes": {
+            "(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})(?:.(?:25[0-5]|2[0-4]\\d|[01]\\d{2}|\\d{1,2})){3}": 0.0,
+            "-?\\d+": 1.0,
+            "-?\\d+(?:\\.\\d*)?": 1.0,
+            "<\\/?(?:p|a|b|img)(?: \\/)?>": 0.0,
+            "[A-Za-z0-9\\.,;:!?()\\\"'%\\-]+": 1.0,
+            "\\b[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}-[0-5][0-9a-fA-F]{3}-[089ab][0-9a-fA-F]{3}-\\b[0-9a-fA-F]{12}\\b ": 0.0,
+            "\\d+": 1.0,
+            "\\s+$": 0.0,
+            "^\\s+": 0.0,
+            "https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,255}\\.[a-z]{2,6}\\b(?:[-a-zA-Z0-9@:%_\\+.~#()?&//=]*)": 0.0
+          },
+          "success_ratio": 1.0
+        }
+      }
+    },
+    {
       "expectation_type": "expect_column_values_to_be_in_set",
       "kwargs": {
         "column": "product",
@@ -295,7 +338,7 @@
   "meta": {
     "citations": [
       {
-        "citation_date": "2023-02-08T17:38:55.979455Z",
+        "citation_date": "2023-02-09T21:03:08.472432Z",
         "comment": "Created by effective Rule-Based Profiler of OnboardingDataAssistant with the configuration included.\n"
       }
     ],
