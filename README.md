@@ -12,7 +12,7 @@
   - [S3 🧊](##-s3-)
   - [SQLite DB 🛢](##-sqlite-db-)
   - [Unit Testing ⚒️](#unit-testing)
-  - [Great Expectations](#great-expectations)
+  - [Great Expectations ☑️](#great-expectations)
 
 
 
@@ -63,10 +63,10 @@ pytest -v test.py
 4. Export test result to log or html file
 ```
 # Export to log file
-pytest -v test.py > test_run_$(date "+%Y-%m-%d_%H:%M:%S").log
+pytest -v test.py > test_results.log
 
 # Export to html file 
-pytest --html=test_report.html test.py
+pytest --html=test_results.html test.py
 ```
 
 ## Great Expectations
@@ -97,6 +97,7 @@ cd great_expectations
 - Create data folder for datasource to import GOES18 and NEXRAD data
 
 1.4. Import data into Repo
+
 > GOES18
 
 > NEXRAD
@@ -106,10 +107,13 @@ cd great_expectations
 Configured datasources in order to connect to GOES18 and NEXRAD data.
 
 2.1. Create datasource with CLI
+
 ```
 great_expectations datasource new
 ```
+
 *Options to select from prompt:*
+
 > `1` - Local File 
 >
 > `1` - Pandas
@@ -117,8 +121,11 @@ great_expectations datasource new
 > `data` - Relative path to GOES and NEXRAD datasets
 
 - `datasource_new` python notebook is generated
+
 * Rename datasource name i.e. `goes18-nexrad_datasource` 
+
 * Edit `example.yml` file to ignore non csv files
+
 ```
 example_yaml = f"""
 name: {datasource_name}
@@ -142,34 +149,39 @@ data_connectors:
 """
 print(example_yaml)
 ```
+
 - Save the datasource Configuration and close Jupyter notebook
 - Wait for terminal to show `Saving file at /datasource_new.ipynb`
 
 **3. Expectations**
 
 3.1 Create Expectation Suite with CLI
+
 ```
 great_expectations suite new
 ```
+
 *Options to select from prompt:*
->`3` - Automatically, using a profiler
+
+>`3` - Automatically, using a Data Assistant
 >
 >`1` - Select index of file goes18_db_extract.csv 
 >
 >*or*
 >
->`2` - Select index of file goes18_db_extract.csv 
+>`2` - Select index of file nexrad_db_extract.csv 
 >
 > Suite Name: `goes18_suite` or `nexrad_suite` based on data file selected from prompt
 
 *Note: Proceed with steps 3 and onwards for each data file at a time.*
 
-- `datasource_new` python notebook is generated
+- suite python notebook is generated
 
 - Update `exclude_column_names`:
 
   - `goes18_suite`
   
+ 
   ```
   exclude_column_names = [
   # "id",
@@ -182,6 +194,7 @@ great_expectations suite new
   
   - `nexrad_suite`
   
+  
   ```
   exclude_column_names = [
   # "id",
@@ -191,7 +204,7 @@ great_expectations suite new
   # "ground_station",
   ]
   ```
- - Run to create default expectation and analyze the result
+ - Run all cells to create default expectation and analyze the result
 
  - Wait for terminal to show `Saving file at /*.ipynb`
 
@@ -213,7 +226,10 @@ great_expectations suite new
  
  >`1` - Manually, without interacting with a sample batch of data (default)
  
+ 
 **4. Data Validation**
+
+4.1. Create Checkpoint 
 
 For 'GOES18' checkpoint:
 
@@ -226,6 +242,16 @@ For `NEXRAD` checkpoint:
 great_expectations checkpoint new nexrad_checkpoint_v0.1
 ```
 
+- checkpoint python notebook is generated, run all cells to generate report in new page
+
+**5. Deploy using GitHub Actions**
+
+ - Go to Project Settings
+ - Navigate to GitHub Pages 
+ - Select `GitHub Actions` as source for build and deployment
+ - Configure Static HTML for GitHub Actions workflow to deploy static files in a repository without a build
+ - Set path to `great_expectations/uncommitted/data_docs/local_site` in `static.yml` file
+ - Commit changes
 
 -----
 > WE ATTEST THAT WE HAVEN’T USED ANY OTHER STUDENTS’ WORK IN OUR ASSIGNMENT AND ABIDE BY THE POLICIES LISTED IN THE STUDENT HANDBOOK.
