@@ -20,7 +20,7 @@
 ## Abstract
 The task involves building a data exploration tool for a geospatial startup. The tool utilizes publicly available data sources, specifically the NexRad and GOES satellite datasets, to make it easier for data analysts to download data. The data sources can be found on the National Oceanic and Atmospheric Administration (NOAA) website and the tool has several capabilities to support data exploration and download. The following capabilties can be performed from this project:
 
-- point 1
+- scrapes the open registry for NOAA GOES and NEXRAD satellites on AWS S3
 - point 2
 - point 3
 
@@ -260,7 +260,7 @@ great_expectations checkpoint new nexrad_checkpoint_v0.1
 -----
 > WE ATTEST THAT WE HAVEN’T USED ANY OTHER STUDENTS’ WORK IN OUR ASSIGNMENT AND ABIDE BY THE POLICIES LISTED IN THE STUDENT HANDBOOK.
 > 
-> Vraj: 30%, Poojitha: 23.33%, Merwin: 23.33%, Anushka: 23.33%
+> Vraj: 25%, Poojitha: 25%, Merwin: 25%, Anushka: 25%
 -----
 
 
