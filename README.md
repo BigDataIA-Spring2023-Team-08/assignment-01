@@ -30,7 +30,7 @@ The task involves building a data exploration tool for a geospatial startup. The
 - View the map plot of all the NEXRAD satellite locations in the USA
 
 
-The application site for the project hosted on [Streamlit Cloud](https://streamlit.io/cloud) can be accessed [here](https://anushkadesai077-data-eng-assignment01-finalstreamlit-app-p0g6vh.streamlit.app/).
+The application site for the project hosted on streamlit cloud can be accessed [here](https://satellite-data-team-08.streamlit.app/).
 
 ## Data Sources
 The National Oceanic and Atmospheric Administration (NOAA) is a government agency responsible for monitoring the weather and climate of the United States. It operates two types of satellites, the [Geostationary Operational Environmental Satellite (GOES)](https://www.goes.noaa.gov) and the [Next Generation Weather Radar (NexRad)](https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar) , which collect data on various meteorological phenomena. This data is then made publicly available through the NOAA website, allowing data analysts to easily access it. We have aimed to build a data exploration tool that leverages these publicly available data sources to simplify the process of downloading and analyzing the data.
