@@ -28,6 +28,10 @@ The task involves building a data exploration tool for a geospatial startup. The
 The National Oceanic and Atmospheric Administration (NOAA) is a government agency responsible for monitoring the weather and climate of the United States. It operates two types of satellites, the [Geostationary Operational Environmental Satellite (GOES)](https://www.goes.noaa.gov) and the [Next Generation Weather Radar (NexRad)](https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar) , which collect data on various meteorological phenomena. This data is then made publicly available through the NOAA website, allowing data analysts to easily access it. We have aimed to build a data exploration tool that leverages these publicly available data sources to simplify the process of downloading and analyzing the data.
 
 
+## SQLite DB
+After the metadata is scraped and stored as dataframes each corresponding to GOES18,NexRad and NexRad location maps, we first check if the database exists and initialize it if there is no database.Once a connection to the database is established, SQL queries are made to create tables to store the scraped data(GOES,NexRad and  NexRad location maps) in the SQLite database. The tables are named GOES_METADATA, NEXRAD_METADATA and MAPDATA_NEXRAD.In order to enable the users to search by field criteria on Streamlit UI, they should be presented with the values based on their selection. This is done in the backend through SQL queries to the database to fetch data depending on the user’s selections dynamically.
+
+
 ## Streamlit
 The data exploration tool for the Geospatial startup uses the Python library Streamlit for its user interface. The tool offers a user-friendly experience with three distinct pages, each dedicated to NexRad, GOES, and NexRad location maps. On each page, users can choose between downloading satellite data based on filename or specific field criteria. The UI then displays a download link to the S3 bucket, enabling users to successfully retrieve the desired satellite images.
 
@@ -256,7 +260,7 @@ great_expectations checkpoint new nexrad_checkpoint_v0.1
 -----
 > WE ATTEST THAT WE HAVEN’T USED ANY OTHER STUDENTS’ WORK IN OUR ASSIGNMENT AND ABIDE BY THE POLICIES LISTED IN THE STUDENT HANDBOOK.
 > 
-> Vraj: 25%, Poojitha: 25%, Merwin: 25%, Anushka: 25%
+> Vraj: 30%, Poojitha: 23.33%, Merwin: 23.33%, Anushka: 23.33%
 -----
 
 
