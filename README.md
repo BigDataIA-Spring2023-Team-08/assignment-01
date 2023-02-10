@@ -2,7 +2,7 @@
 -----
 
 > ✅ Active status <br>
-> [🔗 Application link](https://anushkadesai077-data-eng-assignment01-finalstreamlit-app-p0g6vh.streamlit.app/) <br>
+> [🔗 Application link](https://satellite-data-team-08.streamlit.app/) <br>
 > [🧪 Codelab Slides](https://docs.google.com/document/d/13P-uClVhvU06-DsU9b-BeoZrHEp6w9i-1XbBmKHDtEA/edit?usp=sharing)
 
 
@@ -113,7 +113,22 @@ streamlit run streamlit_app.py
 
 
 ## Storing logs to AWS CloudWatch
+Logging is an essential part of any code/application. It gives us details about code functioning and can be helpful while testing out the code. Not only this, logging user level actions also gives an idea about what actions are being performed both in the UI as well as the functions being executed in our backend. We implement logs using AWS CloudWatch. 
 
+### Set up for logging to AWS CloudWatch:
+
+For this, you need to set up an IAM AWS user with a policy attached for full access to logs. After this, generate your credentials as previously done for the boto3 client and store these logging credentials in the .env configuration file as AWS_LOG_ACCESS_KEY and AWS_LOG_SECRET_KEY. After this, we create a log group within CloudWatch and 4 different log streams as follows:
+
+- `db-logs`: to store logs of all activity related to the database. For example, scraping data & storing on database tables
+- `s3-bucket-logs`: logs for s3 bucket activity, that is when you successfully copying file from public s3 bucket to personal bucket
+- `user-input-logs`: logs the pages user opens while running our application, or when filename format is invalid or when a user selects a particular file for download
+- `test-logs`: logs related to execution of testing code
+
+### Incorporating logs into your code: 
+
+Logging is just like storing a print statement into your log with a timestamp. Timestamp is crucial to know what happens when. The text that is logged depends on what we wish to display in the log. A thing to take care of is we need to always define the log stream as well so that we rightly log things based on the category of action. All of this is simply achieved through the `boto3` client we initialized for logs above by using the `put_log_events()` function in `boto3`. Necessary log code blocks have been added throughout our python files to enable logging. 
+
+The logs can be viewed by opening your AWS management console and going to CloudWatch under which on the left you will find log groups and within these you will find your log streams. Clicking on each log stream will show the logs captured along with time time stamp.
 
 ## Unit Testing
 [PyTest](https://docs.pytest.org/en/7.1.x/contents.html) framework implemented to write tests which is easy to use but can be scaled to support functional testing for applications and libraries.
