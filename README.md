@@ -94,7 +94,7 @@ great_expectations init
 ```
 cd great_expectations
 ```
-- Create data folder for datasource to import GOES18 and NEXRAD data
+- Create data folder for datasource to import `GOES18` and `NEXRAD` data
 
 1.4. Import data into Repo
 
@@ -104,7 +104,7 @@ cd great_expectations
 
 **2. Datasource**
 
-Configured datasources in order to connect to GOES18 and NEXRAD data.
+Configured datasources in order to connect to `GOES18` and `NEXRAD` data.
 
 2.1. Create datasource with CLI
 
@@ -128,7 +128,7 @@ great_expectations datasource new
 
 ```
 example_yaml = f"""
-name: {datasource_name}
+name: goes18-nexrad_datasource
 class_name: Datasource
 execution_engine:
   class_name: PandasExecutionEngine
@@ -139,7 +139,7 @@ data_connectors:
     default_regex:
       group_names:
         - data_asset_name
-      pattern: (.*)
+      pattern: (.*)\.csv
   default_runtime_data_connector_name:
     class_name: RuntimeDataConnector
     assets:
@@ -165,11 +165,11 @@ great_expectations suite new
 
 >`3` - Automatically, using a Data Assistant
 >
->`1` - Select index of file goes18_db_extract.csv 
+>`1` - Select index of file `goes18_db_extract.csv` 
 >
 >*or*
 >
->`2` - Select index of file nexrad_db_extract.csv 
+>`2` - Select index of file `nexrad_db_extract.csv`
 >
 > Suite Name: `goes18_suite` or `nexrad_suite` based on data file selected from prompt
 
@@ -216,7 +216,7 @@ great_expectations suite new
  great_expectations suite edit goes18_suite
  ```
  
-  For `goes18_suite`:
+  For `nexrad_suite`:
  
  ```
  great_expectations suite edit nexrad_suite
