@@ -82,7 +82,7 @@ The data exploration tool for the Geospatial startup uses the Python library [St
 ### Flow for NEXRAD Maps Location page
 1. Displays a map of all satellite locations with hover text for all points
 
-### Steps:
+### Steps to run application:
 1. Install Streamlit package
 
 ```
