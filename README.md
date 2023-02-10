@@ -117,7 +117,18 @@ Logging is an essential part of any code/application. It gives us details about 
 
 ### Set up for logging to AWS CloudWatch:
 
-For this, you need to set up an IAM AWS user with a policy attached for full access to logs. After this, generate your credentials as previously done for the boto3 client and store these logging credentials in the .env configuration file as AWS_LOG_ACCESS_KEY and AWS_LOG_SECRET_KEY. After this, we create a log group within CloudWatch and 4 different log streams as follows:
+For this, you need to set up an IAM AWS user with a policy attached for full access to logs. After this, generate your credentials as previously done for the boto3 client and store these logging credentials in the .env configuration file as AWS_LOG_ACCESS_KEY and AWS_LOG_SECRET_KEY. Initialize this client using boto3 as follows: 
+
+```
+#authenticate S3 client for logging with your user credentials that are stored in your .env config file
+clientLogs = boto3.client('logs',
+                        region_name='us-east-1',
+                        aws_access_key_id = os.environ.get('AWS_LOG_ACCESS_KEY'),
+                        aws_secret_access_key = os.environ.get('AWS_LOG_SECRET_KEY')
+                        )
+```
+
+After this, we create a log group within CloudWatch and 4 different log streams as follows:
 
 - `db-logs`: to store logs of all activity related to the database. For example, scraping data & storing on database tables
 - `s3-bucket-logs`: logs for s3 bucket activity, that is when you successfully copying file from public s3 bucket to personal bucket
@@ -127,6 +138,19 @@ For this, you need to set up an IAM AWS user with a policy attached for full acc
 ### Incorporating logs into your code: 
 
 Logging is just like storing a print statement into your log with a timestamp. Timestamp is crucial to know what happens when. The text that is logged depends on what we wish to display in the log. A thing to take care of is we need to always define the log stream as well so that we rightly log things based on the category of action. All of this is simply achieved through the `boto3` client we initialized for logs above by using the `put_log_events()` function in `boto3`. Necessary log code blocks have been added throughout our python files to enable logging. 
+
+```
+clientLogs.put_log_events(      #logging to AWS CloudWatch logs
+        logGroupName = "assignment01-logs",   #log group name
+        logStreamName = "db-logs",    #log stream name
+        logEvents = [
+            {
+            'timestamp' : int(time.time() * 1e3),   #timestmp value
+            'message' : "User opened NEXRAD Locations - Map page"    #message of the log
+            }
+        ]
+    )
+```
 
 The logs can be viewed by opening your AWS management console and going to CloudWatch under which on the left you will find log groups and within these you will find your log streams. Clicking on each log stream will show the logs captured along with time time stamp.
 
