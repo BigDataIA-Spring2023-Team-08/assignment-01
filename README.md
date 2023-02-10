@@ -231,7 +231,7 @@ great_expectations suite new
 
 4.1. Create Checkpoint 
 
-For 'GOES18' checkpoint:
+For `GOES18` checkpoint:
 
 ```
 great_expectations checkpoint new goes18_checkpoint_v0.1
