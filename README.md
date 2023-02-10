@@ -1,7 +1,10 @@
 # Building a Data Exploration Tool for Geospatial Startups: Utilizing NOAA's NexRad and GOES Satellite Data Sources
 -----
 
-> Status ✅: Active 
+> Status ✅: Active <br>
+> [Application link 🔗](https://anushkadesai077-data-eng-assignment01-finalstreamlit-app-p0g6vh.streamlit.app/) <br>
+> [Colab Slides 🧪](https://docs.google.com/document/d/13P-uClVhvU06-DsU9b-BeoZrHEp6w9i-1XbBmKHDtEA/edit?usp=sharing)
+
 
 ----- 
 
@@ -18,14 +21,14 @@
 
 
 ## Abstract
-The task involves building a data exploration tool for a geospatial startup. The tool utilizes publicly available data sources, specifically the NexRad and GOES satellite datasets, to make it easier for data analysts to download data. The data sources can be found on the National Oceanic and Atmospheric Administration (NOAA) website and the tool has several capabilities to support data exploration and download. The following capabilties can be performed from this project:
+The task involves building a data exploration tool for a geospatial startup. The tool utilizes publicly available data sources, specifically the NexRad and GOES satellite datasets, to make it easier for data analysts to download data. The data sources can be found on the National Oceanic and Atmospheric Administration (NOAA) website and the tool has several capabilities to support data exploration and download. This work can help one: 
 
-- scrape the open registry for NOAA GOES and NEXRAD satellites on AWS S3 
-- generate a download link from the registry based on input parameters or filename on UI
-- get 
+- Access the publicly available SEVIR satellite radar data in a highly interactive & quick way 
+- Scrap the data from public AWS S3 buckets to store them into a personal S3 bucket making it convenient to then perform additional tasks or use these saved files from your personal bucket. Government’s public data can always be hard to navigate across but we make it easy with our application
+- View the map plot of all the NEXRAD satellite locations in the USA
 
 
-The test site for the project hosted on [Streamlit Cloud](https://streamlit.io/cloud) can be accessed [here](https://anushkadesai077-data-eng-assignment01-finalstreamlit-app-p0g6vh.streamlit.app/).
+The application site for the project hosted on [Streamlit Cloud](https://streamlit.io/cloud) can be accessed [here](https://anushkadesai077-data-eng-assignment01-finalstreamlit-app-p0g6vh.streamlit.app/).
 
 ## Data Sources
 The National Oceanic and Atmospheric Administration (NOAA) is a government agency responsible for monitoring the weather and climate of the United States. It operates two types of satellites, the [Geostationary Operational Environmental Satellite (GOES)](https://www.goes.noaa.gov) and the [Next Generation Weather Radar (NexRad)](https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar) , which collect data on various meteorological phenomena. This data is then made publicly available through the NOAA website, allowing data analysts to easily access it. We have aimed to build a data exploration tool that leverages these publicly available data sources to simplify the process of downloading and analyzing the data.
