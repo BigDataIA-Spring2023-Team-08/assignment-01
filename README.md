@@ -1,9 +1,9 @@
 # Building a Data Exploration Tool for Geospatial Startups: Utilizing NOAA's NexRad and GOES Satellite Data Sources
 -----
 
-> Status ✅: Active <br>
-> [Application link 🔗](https://anushkadesai077-data-eng-assignment01-finalstreamlit-app-p0g6vh.streamlit.app/) <br>
-> [Colab Slides 🧪](https://docs.google.com/document/d/13P-uClVhvU06-DsU9b-BeoZrHEp6w9i-1XbBmKHDtEA/edit?usp=sharing)
+> ✅ Active status <br>
+> [🔗 Application link](https://anushkadesai077-data-eng-assignment01-finalstreamlit-app-p0g6vh.streamlit.app/) <br>
+> [🧪 Codelab Slides](https://docs.google.com/document/d/13P-uClVhvU06-DsU9b-BeoZrHEp6w9i-1XbBmKHDtEA/edit?usp=sharing)
 
 
 ----- 
@@ -11,8 +11,8 @@
 ## Index
   - [Abstract 📝](#abstract)
   - [Data Sources 💽](#data-sources)
-  - [SQLite DB 🛢](#sqlite-db)
   - [Scraping Data and Copying to AWS S3 bucket🧊](#scraping-data-and-copying-to-aws-s3-bucket)
+  - [SQLite DB 🛢](#sqlite-db)
   - [Streamlit UI 🖥️](#streamlit)
   - [Storing logs to AWS CloudWatch 💾](#storing-logs-to-aws-cloudwatch)
   - [Unit Testing ⚒️](#unit-testing)
@@ -35,10 +35,6 @@ The application site for the project hosted on [Streamlit Cloud](https://streaml
 ## Data Sources
 The National Oceanic and Atmospheric Administration (NOAA) is a government agency responsible for monitoring the weather and climate of the United States. It operates two types of satellites, the [Geostationary Operational Environmental Satellite (GOES)](https://www.goes.noaa.gov) and the [Next Generation Weather Radar (NexRad)](https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar) , which collect data on various meteorological phenomena. This data is then made publicly available through the NOAA website, allowing data analysts to easily access it. We have aimed to build a data exploration tool that leverages these publicly available data sources to simplify the process of downloading and analyzing the data.
 
-## SQLite DB
-After the metadata is scraped and stored as dataframes each corresponding to GOES18,NexRad and NexRad location maps, we first check if the database exists and initialize it if there is no database. Once a connection to the database is established, SQL queries are made to create tables to store the scraped data (GOES, NexRad and  NexRad location maps) in the [SQLite](https://www.sqlite.org/index.html) database. The tables are named GOES_METADATA, NEXRAD_METADATA and MAPDATA_NEXRAD.In order to enable the users to search by field criteria on Streamlit UI, they should be presented with the values based on their selection. This is done in the backend through SQL queries to the database to fetch data depending on the user’s selections dynamically.
-
-
 ## Scraping Data and Copying to AWS S3 bucket
 Data scraping for the data sources is done from the publicly accessible AWS S3 bucket for eac - [GOES (provided by NOAA)](https://registry.opendata.aws/noaa-goes/) & [NEXRAD data registry](https://registry.opendata.aws/noaa-nexrad/). For the purpose of our application, we restrict our data to [GOES-18 data](https://noaa-goes18.s3.amazonaws.com/index.html) and [NEXRAD level 2](https://noaa-nexrad-level2.s3.amazonaws.com/index.html) buckets respectively. Within this, the data for our prototype application is further restricted (mentioned below). The third data source needed for this application is the latitude, longitudes and state information for all NEXRAD satellites in the US. This scraping is done from a [.txt file](https://www.ncei.noaa.gov/access/homr/file/nexrad-stations.txt) found on NOAA’s data registry. The final sources where data is scraped from: 
 
@@ -54,6 +50,13 @@ Only the `scraper_main.py` script needs to be executed to perform scraping & sto
 The two scripts scripts `scraper_goes18.py` & `scraper_nexrad.py` access the relevant S3 bucket and return the data as a dataframe. Similarly, the `scraper_mapdata.py` function returns the data scraped from the txt file. 
 
 At the end, the `scraper_main.py` script calls the `store_scraped_data_to_db` function to store this scraped metadata in the relevant tables within our SQLite database.
+
+## SQLite DB
+After the metadata is scraped and stored as dataframes each corresponding to GOES18, NexRad and NexRad location maps, we first check if the database exists and initialize it if there is no database. This creates a `.db` file. Once a connection to the database is established, SQL queries are made to create tables to store the scraped data (GOES, NexRad and  NexRad location maps) in the [SQLite](https://www.sqlite.org/index.html) database. These create tables statements can be found in `sql_script_goes18.sql, sql_script_nexrad.sql, sql_script_mapdata.sql` files. The tables are named `GOES_METADATA, NEXRAD_METADATA and MAPDATA_NEXRAD`. 
+
+After populating these, the SQLite databse is further used throughtout our application to query field values when the user is on the search by fields page on the streamlit UI. In order to enable the users to dynamically get relevant fields selection box options in search by field criteria on UI, they should be presented with the values based on their selection. This is done in the backend through SQL queries to the database to fetch data depending on the user’s selections dynamically. These queries can be found in the `query_metadata_database.py` script. 
+
+The NexRad map plot page on the streamlit UI queries all data from the `MAPDATA_NEXRAD` table in the SQLite database. The query pertaining to this is also present in the `query_metadata_database.py` script.
 
 ## Streamlit
 The data exploration tool for the Geospatial startup uses the Python library [Streamlit](https://streamlit.iohttps://streamlit.io) for its user interface. The tool offers a user-friendly experience with three distinct pages, each dedicated to NexRad, GOES, and NexRad location maps. On each page, users can choose between downloading satellite data based on filename or specific field criteria. The UI then displays a download link to the S3 bucket, enabling users to successfully retrieve the desired satellite images.
