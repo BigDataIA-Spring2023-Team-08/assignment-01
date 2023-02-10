@@ -11,9 +11,10 @@
 ## Index
   - [Abstract 📝](#abstract)
   - [Data Sources 💽](#data-sources)
-  - [Streamlit 🖥️](#streamlit)
-  - [S3 🧊](#s3-)
   - [SQLite DB 🛢](#sqlite-db)
+  - [Scraping Data and Copying to AWS S3 bucket🧊](#scraping-data-and-copying-to-aws-s3-bucket)
+  - [Streamlit UI 🖥️](#streamlit)
+  - [Storing logs to AWS CloudWatch 💾](#storing-logs-to-aws-cloudwatch)
   - [Unit Testing ⚒️](#unit-testing)
   - [Great Expectations ☑️](#great-expectations)
 
@@ -33,9 +34,13 @@ The application site for the project hosted on [Streamlit Cloud](https://streaml
 ## Data Sources
 The National Oceanic and Atmospheric Administration (NOAA) is a government agency responsible for monitoring the weather and climate of the United States. It operates two types of satellites, the [Geostationary Operational Environmental Satellite (GOES)](https://www.goes.noaa.gov) and the [Next Generation Weather Radar (NexRad)](https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar) , which collect data on various meteorological phenomena. This data is then made publicly available through the NOAA website, allowing data analysts to easily access it. We have aimed to build a data exploration tool that leverages these publicly available data sources to simplify the process of downloading and analyzing the data.
 
-
 ## SQLite DB
 After the metadata is scraped and stored as dataframes each corresponding to GOES18,NexRad and NexRad location maps, we first check if the database exists and initialize it if there is no database. Once a connection to the database is established, SQL queries are made to create tables to store the scraped data (GOES, NexRad and  NexRad location maps) in the [SQLite](https://www.sqlite.org/index.html) database. The tables are named GOES_METADATA, NEXRAD_METADATA and MAPDATA_NEXRAD.In order to enable the users to search by field criteria on Streamlit UI, they should be presented with the values based on their selection. This is done in the backend through SQL queries to the database to fetch data depending on the user’s selections dynamically.
+
+
+## Scraping Data and Copying to AWS S3 bucket
+
+
 
 
 ## Streamlit
@@ -70,6 +75,8 @@ def main():
 streamlit run streamlit_app.py
 ```
 
+
+## Storing logs to AWS CloudWatch
 
 
 ## Unit Testing
