@@ -111,6 +111,12 @@ def main():
 streamlit run streamlit_app.py
 ```
 
+### Deploying the streamlit application 
+
+In order to make our application publicly accessible without the users needing to do any setup, we have deployed our application on Streamlit Cloud. [Streamlit Cloud](https://streamlit.io/cloud) allows you to deploy your hosted application in one click, it directly uses the code from GitHub and thus enables to have instant code changed reflected in the running deployed application. 
+
+After signing in to streamlit cloud using GitHub sign in (recommended way, or else you needed to link your GitHub after creating an accounting) you can easily add a new application. When doing this, all it asks is the repository link and the file name which contains the stream code. In our case, this is the `streamlit_app.py` file. To successfully use the environment variables (aka secrets) defined in the .env configuration file in this hosted application, we use the secrets option. Before deploying the application, go to the advanced settings and in secrets paste in the contents of the .env configuration file. Only one change needs to be done, the values need to be enclosed within quotations `“ “` now. Then click save and deploy the application. The streamlit application is now live! 
+
 
 ## Storing logs to AWS CloudWatch
 Logging is an essential part of any code/application. It gives us details about code functioning and can be helpful while testing out the code. Not only this, logging user level actions also gives an idea about what actions are being performed both in the UI as well as the functions being executed in our backend. We implement logs using AWS CloudWatch. 
