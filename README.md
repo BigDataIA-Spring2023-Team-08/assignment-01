@@ -1,4 +1,4 @@
-# Building a Data Exploration Tool for Geospatial Startups: Utilizing NOAA's NexRad and GOES Satellite Data Sources - Assignment_01
+# Building a Data Exploration Tool for Geospatial Startups: Utilizing NOAA's NexRad and GOES Satellite Data Sources
 -----
 
 > Status ✅: Active 
@@ -9,8 +9,8 @@
   - [Abstract 📝](#abstract)
   - [Data Sources 💽](#data-sources)
   - [Streamlit 🖥️](#streamlit)
-  - [S3 🧊](##-s3-)
-  - [SQLite DB 🛢](##-sqlite-db-)
+  - [S3 🧊](#s3-)
+  - [SQLite DB 🛢](#sqlite-db)
   - [Unit Testing ⚒️](#unit-testing)
   - [Great Expectations ☑️](#great-expectations)
 
@@ -20,20 +20,54 @@
 ## Abstract
 The task involves building a data exploration tool for a geospatial startup. The tool utilizes publicly available data sources, specifically the NexRad and GOES satellite datasets, to make it easier for data analysts to download data. The data sources can be found on the National Oceanic and Atmospheric Administration (NOAA) website and the tool has several capabilities to support data exploration and download. The following capabilties can be performed from this project:
 
-- scrapes the open registry for NOAA GOES and NEXRAD satellites on AWS S3
-- point 2
-- point 3
+- scrape the open registry for NOAA GOES and NEXRAD satellites on AWS S3 
+- generate a download link from the registry based on input parameters or filename on UI
+- get 
+
+
+The test site for the project hosted on [Streamlit Cloud](https://streamlit.io/cloud) can be accessed [here](https://anushkadesai077-data-eng-assignment01-finalstreamlit-app-p0g6vh.streamlit.app/).
 
 ## Data Sources
 The National Oceanic and Atmospheric Administration (NOAA) is a government agency responsible for monitoring the weather and climate of the United States. It operates two types of satellites, the [Geostationary Operational Environmental Satellite (GOES)](https://www.goes.noaa.gov) and the [Next Generation Weather Radar (NexRad)](https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar) , which collect data on various meteorological phenomena. This data is then made publicly available through the NOAA website, allowing data analysts to easily access it. We have aimed to build a data exploration tool that leverages these publicly available data sources to simplify the process of downloading and analyzing the data.
 
 
 ## SQLite DB
-After the metadata is scraped and stored as dataframes each corresponding to GOES18,NexRad and NexRad location maps, we first check if the database exists and initialize it if there is no database.Once a connection to the database is established, SQL queries are made to create tables to store the scraped data(GOES,NexRad and  NexRad location maps) in the SQLite database. The tables are named GOES_METADATA, NEXRAD_METADATA and MAPDATA_NEXRAD.In order to enable the users to search by field criteria on Streamlit UI, they should be presented with the values based on their selection. This is done in the backend through SQL queries to the database to fetch data depending on the user’s selections dynamically.
+After the metadata is scraped and stored as dataframes each corresponding to GOES18,NexRad and NexRad location maps, we first check if the database exists and initialize it if there is no database. Once a connection to the database is established, SQL queries are made to create tables to store the scraped data (GOES, NexRad and  NexRad location maps) in the [SQLite](https://www.sqlite.org/index.html) database. The tables are named GOES_METADATA, NEXRAD_METADATA and MAPDATA_NEXRAD.In order to enable the users to search by field criteria on Streamlit UI, they should be presented with the values based on their selection. This is done in the backend through SQL queries to the database to fetch data depending on the user’s selections dynamically.
 
 
 ## Streamlit
-The data exploration tool for the Geospatial startup uses the Python library Streamlit for its user interface. The tool offers a user-friendly experience with three distinct pages, each dedicated to NexRad, GOES, and NexRad location maps. On each page, users can choose between downloading satellite data based on filename or specific field criteria. The UI then displays a download link to the S3 bucket, enabling users to successfully retrieve the desired satellite images.
+The data exploration tool for the Geospatial startup uses the Python library [Streamlit](https://streamlit.iohttps://streamlit.io) for its user interface. The tool offers a user-friendly experience with three distinct pages, each dedicated to NexRad, GOES, and NexRad location maps. On each page, users can choose between downloading satellite data based on filename or specific field criteria. The UI then displays a download link to the S3 bucket, enabling users to successfully retrieve the desired satellite images.
+
+### Steps:
+1. Install Streamlit package
+
+```
+pip install streamlit
+```
+
+2. Build a UI for the app. Code snippet for main function, depicting 3 different pages for GOES, NEXRAD and NEXRAD locations Map:
+```
+def main():
+    st.set_page_config(page_title="Weather Data Files", layout="wide")
+    page = st.sidebar.selectbox("Select a page", ["GOES-18", "NEXRAD", "NEXRAD Locations - Map"])   #main options of streamlit app
+
+    if page == "GOES-18":
+        with st.spinner("Loading..."): #spinner element
+            goes_main()
+    elif page == "NEXRAD":
+        with st.spinner("Loading..."): #spinner element
+            nexrad_main()
+    elif page == "NEXRAD Locations - Map":
+        with st.spinner("Generating map..."): #spinner element
+            map_main()
+
+```
+3. Run the code
+```
+streamlit run streamlit_app.py
+```
+
+
 
 ## Unit Testing
 [PyTest](https://docs.pytest.org/en/7.1.x/contents.html) framework implemented to write tests which is easy to use but can be scaled to support functional testing for applications and libraries.
