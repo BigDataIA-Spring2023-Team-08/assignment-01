@@ -24,8 +24,9 @@
 ## Abstract
 The task involves building a data exploration tool for a geospatial startup. The tool utilizes publicly available data sources, specifically the NexRad and GOES satellite datasets, to make it easier for data analysts to download data. The data sources can be found on the National Oceanic and Atmospheric Administration (NOAA) website and the tool has several capabilities to support data exploration and download. This work can help one: 
 
-- Access the publicly available SEVIR satellite radar data in a highly interactive & quick way 
+- Access the publicly available SEVIR satellite radar data in a highly interactive & quick way
 - Scrap the data from public AWS S3 buckets to store them into a personal S3 bucket making it convenient to then perform additional tasks or use these saved files from your personal bucket. Government’s public data can always be hard to navigate across but we make it easy with our application
+- Get files through the application by 2 options: searching by fields or directly entering a filename to get the URL from the source
 - View the map plot of all the NEXRAD satellite locations in the USA
 
 
@@ -39,12 +40,44 @@ After the metadata is scraped and stored as dataframes each corresponding to GOE
 
 
 ## Scraping Data and Copying to AWS S3 bucket
+Data scraping for the data sources is done from the publicly accessible AWS S3 bucket for eac - [GOES (provided by NOAA)](https://registry.opendata.aws/noaa-goes/) & [NEXRAD data registry](https://registry.opendata.aws/noaa-nexrad/). For the purpose of our application, we restrict our data to [GOES-18 data](https://noaa-goes18.s3.amazonaws.com/index.html) and [NEXRAD level 2](https://noaa-nexrad-level2.s3.amazonaws.com/index.html) buckets respectively. Within this, the data for our prototype application is further restricted (mentioned below). The third data source needed for this application is the latitude, longitudes and state information for all NEXRAD satellites in the US. This scraping is done from a [.txt file](https://www.ncei.noaa.gov/access/homr/file/nexrad-stations.txt) found on NOAA’s data registry. The final sources where data is scraped from: 
 
+- Product `ABI-L1b-RadC/` within GOES-18
+- Years `2022` and `2023` for NEXRAD
+- NEXRAD satellite’s geographical locations
 
+### Set up AWS account & credential variables:
+Scraping of data from these sources is done using the `boto3` python library which allows you to connect to AWS resources using your credentials. After creating a free AWS account, one needs to store their `AWS_ACCESS_KEY` & `AWS_SECRET_KEY` in their local `.env` configuration file in order to access these keys while executing the code.
 
+### Executing code to scrape all data:
+Only the `scraper_main.py` script needs to be executed to perform scraping & storing scraped data into the SQLite database. This script calls the 3 data scraper function for the 3 data sources defined above: `scraper_goes18.py, scraper_nexrad.py, scraper_mapdata.py`.
+The two scripts scripts `scraper_goes18.py` & `scraper_nexrad.py` access the relevant S3 bucket and return the data as a dataframe. Similarly, the `scraper_mapdata.py` function returns the data scraped from the txt file. 
+
+At the end, the `scraper_main.py` script calls the `store_scraped_data_to_db` function to store this scraped metadata in the relevant tables within our SQLite database.
 
 ## Streamlit
 The data exploration tool for the Geospatial startup uses the Python library [Streamlit](https://streamlit.iohttps://streamlit.io) for its user interface. The tool offers a user-friendly experience with three distinct pages, each dedicated to NexRad, GOES, and NexRad location maps. On each page, users can choose between downloading satellite data based on filename or specific field criteria. The UI then displays a download link to the S3 bucket, enabling users to successfully retrieve the desired satellite images.
+
+### Streamlit UI layout:
+  - GOES18 data downloader page
+      - Download file by entering field values
+      - Get public URL by entering filename
+  - NEXRAD data downloaded page
+      - Download file by entering field values
+      - Get public URL by entering filename
+  - NEXRAD Maps Location page
+
+### Flow for Download file by entering field values
+1. Enter text box fields for each value (for example, in GOES18 it is year, day & hour)
+2. Once these initial selections are made, dynamically list the files available at the folder with the selections given 
+3. Choose a file from the list to download it via a URL
+
+### Flow for Get public URL by entering filename
+1. Enter a filename (along with the file extension, if any) and hit enter
+2. If found, the URL from the public bucket is shown, else a relevant error/warning is given 
+
+### Flow for NEXRAD Maps Location page
+1. Displays a map of all satellite locations with hover text for all points
 
 ### Steps:
 1. Install Streamlit package
