@@ -2,50 +2,42 @@ import os
 import boto3
 import time
 import pandas as pd
-from dotenv import load_dotenv
-
-#load env variables and change logging level to info
-load_dotenv()
-
-#authenticate S3 client with your user credentials that are stored in your .env config file
-s3client = boto3.client('s3',
-                        region_name='us-east-1',
-                        aws_access_key_id = os.environ.get('AWS_ACCESS_KEY'),
-                        aws_secret_access_key = os.environ.get('AWS_SECRET_KEY')
-                        )
-
-#authenticate S3 client for logging with your user credentials that are stored in your .env config file
-clientLogs = boto3.client('logs',
-                        region_name='us-east-1',
-                        aws_access_key_id = os.environ.get('AWS_LOG_ACCESS_KEY'),
-                        aws_secret_access_key = os.environ.get('AWS_LOG_SECRET_KEY')
-                        )
-
-#intialise dictionary to store scraped data before moving it to a sqllite table
-scraped_goes18_dict = {
-    'id': [],
-    'product': [],
-    'year': [],
-    'day': [],
-    'hour': []
-}
 
 def scrape_goes18_data():
 
-    """USed to scrape  n and mfgyear as input to give registration details of planes manufactured in the entered year, 
-    The value of n specifies whether the data required is for surveillance or non surveillance planes 
-    n=0 means data for surveillance planes and n=1 indicates data for non surveillance planes.
-    ----------
-    year : int
-        the manufactured year
-    Returns
-    -------
-    json
-        1.  Records of flight registration details
-        2.  if entered year doesn't return any value or data related to that year does not exists the merely prints the years of which data is available from
-            which the user can choose and enter appropriately.
+    """Function scrapes the publically available amazon s3 bucket for GOES-18 satellite radar data,
+    all sub folders for the pre-defined product are selected and appended into a dictionary, the final return 
+    value is a dataframe. Initially, the function sets up 2 boto3 clients (to connect to AWS): 1 for accessing s3 buckets
+    and the other for accessing AWS CloudWatch to perform logging to a log group and log stream. Both these clients have their
+    own AWS access & secret key generated from AWS with necessary permissions that should be stored in your .env file.
+    -----
+    Returns:
+    A dataframe containing path for all subfolders 
     """
-    
+
+    #authenticate S3 client with your user credentials that are stored in your .env config file
+    s3client = boto3.client('s3',
+                            region_name='us-east-1',
+                            aws_access_key_id = os.environ.get('AWS_ACCESS_KEY'),
+                            aws_secret_access_key = os.environ.get('AWS_SECRET_KEY')
+                            )
+
+    #authenticate S3 client for logging with your user credentials that are stored in your .env config file
+    clientLogs = boto3.client('logs',
+                            region_name='us-east-1',
+                            aws_access_key_id = os.environ.get('AWS_LOG_ACCESS_KEY'),
+                            aws_secret_access_key = os.environ.get('AWS_LOG_SECRET_KEY')
+                            )
+
+    #intialise dictionary to store scraped data before moving it to a sqllite table
+    scraped_goes18_dict = {
+        'id': [],
+        'product': [],
+        'year': [],
+        'day': [],
+        'hour': []
+    }
+
     clientLogs.put_log_events(      #logging to AWS CloudWatch logs
         logGroupName = "assignment01-logs",
         logStreamName = "db-logs",
@@ -92,10 +84,4 @@ def scrape_goes18_data():
     )
       
     scraped_goes18_df = pd.DataFrame(scraped_goes18_dict)     #final scraped metadata stored in dataframe
-    return scraped_goes18_df
-
-def main():
-    metadata_goes18 = scrape_goes18_data()
-
-if __name__ == "__main__":
-    main()
+    return scraped_goes18_df    #the dataframe containing all scraped data

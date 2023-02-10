@@ -4,19 +4,26 @@ import re
 import os
 import time
 import plotly.graph_objects as go
-from dotenv import load_dotenv
-
-#load env variables and change logging level to info
-load_dotenv()
-
-#authenticate S3 client for logging with your user credentials that are stored in your .env config file
-clientLogs = boto3.client('logs',
-                        region_name='us-east-1',
-                        aws_access_key_id = os.environ.get('AWS_LOG_ACCESS_KEY'),
-                        aws_secret_access_key = os.environ.get('AWS_LOG_SECRET_KEY')
-                        )
 
 def scrape_nexrad_locations():
+
+    """Function scrapes a .txt file found on the internet containg NEXRAD satellite station locations. It scrapes for
+    details like longitude, latitude, state, county, elevation and ground station ID for the satellites geoprapically 
+    located in the USA. Initially, the function sets up a boto3 client for accessing AWS CloudWatch to perform logging 
+    to a log group and log stream. This client has its own AWS access & secret key generated from AWS with 
+    necessary permissions that should be stored in your .env file.
+    -----
+    Returns:
+    A dictionary containing path for all subfolders 
+    """
+
+    #authenticate S3 client for logging with your user credentials that are stored in your .env config file
+    clientLogs = boto3.client('logs',
+                            region_name='us-east-1',
+                            aws_access_key_id = os.environ.get('AWS_LOG_ACCESS_KEY'),
+                            aws_secret_access_key = os.environ.get('AWS_LOG_SECRET_KEY')
+                            )
+
     #initialise containers for relevant data
     nexrad=[]
     satellite_metadata = {
@@ -55,10 +62,8 @@ def scrape_nexrad_locations():
                 }
             ]
         )  
-        #logging.error("Exited due to HTTP error while accessing URL")
         raise SystemExit(err_http)
     except requests.exceptions.ConnectionError as err_conn:
-        #logging.error("Exited due to connection error while accessing URL")
         clientLogs.put_log_events(      #logging to AWS CloudWatch logs
             logGroupName = "assignment01-logs",
             logStreamName = "db-logs",
@@ -71,7 +76,6 @@ def scrape_nexrad_locations():
         )
         raise SystemExit(err_conn)
     except requests.exceptions.Timeout as err_to:
-        #logging.error("Exited due to timeout error while accessing URL")
         clientLogs.put_log_events(      #logging to AWS CloudWatch logs
             logGroupName = "assignment01-logs",
             logStreamName = "db-logs",
@@ -84,7 +88,6 @@ def scrape_nexrad_locations():
         )
         raise SystemExit(err_to)
     except requests.exceptions.RequestException as err_req:
-        #logging.fatal("Exited due to fatal error")
         clientLogs.put_log_events(      #logging to AWS CloudWatch logs
             logGroupName = "assignment01-logs",
             logStreamName = "db-logs",
@@ -143,81 +146,3 @@ def scrape_nexrad_locations():
     )
 
     return satellite_metadata   #this dict has the final scraped data
-
-def plot_nexrad_locations():
-    satellite_metadata = scrape_nexrad_locations()
-    clientLogs.put_log_events(      #logging to AWS CloudWatch logs
-        logGroupName = "assignment01-logs",
-        logStreamName = "db-logs",
-        logEvents = [
-            {
-            'timestamp' : int(time.time() * 1e3),
-            'message' : "Creating plot for NEXRAD statellite locations"
-            }
-        ]
-    )
-
-    #plotting the coordinates extracted on a map
-    hover_text = []
-    for j in range(len(satellite_metadata['county'])):      #building the text to display when hovering over each point on the plot
-        hover_text.append("Station: " + satellite_metadata['ground_station'][j] + " County:" + satellite_metadata['county'][j] + ", " + satellite_metadata['state'][j])
-
-    #use plotly to plot
-    fig = go.Figure(data=go.Scattergeo(
-            lon = satellite_metadata['longitude'],
-            lat = satellite_metadata['latitude'],
-            text = hover_text,
-            marker= {
-                "color": satellite_metadata['elevation'],
-                "colorscale": "Viridis",
-                "colorbar": {
-                    "title": "Elevation"
-                },
-                "size": 14,
-                "symbol": "circle",
-                "line" : {
-                    "color": 'black',
-                    "width": 1
-                }
-            }
-        ))
-
-    #plot layout
-    fig.update_layout(
-            title = 'All NEXRAD satellite locations along with their elevations',
-            geo_scope='usa',
-            mapbox = {
-                    "zoom": 12,
-                    "pitch": 0,
-                    "center": {
-                        "lat": 31.0127195,
-                        "lon": 121.413115
-                    }
-            },
-            font = {
-                "size": 18
-            },
-            autosize= True
-        )
-
-    fig.update_layout(height=700)
-    #fig.show()
-
-    clientLogs.put_log_events(      #logging to AWS CloudWatch logs
-        logGroupName = "assignment01-logs",
-        logStreamName = "db-logs",
-        logEvents = [
-            {
-            'timestamp' : int(time.time() * 1e3),
-            'message' : "Successfully created plot for NEXRAD statellite locations"
-            }
-        ]
-    )
-
-    return fig
-
-# def main():
-#     map_plot = plot_nexrad_locations()
-
-# if __name__ == "__main__":
-#     main()
