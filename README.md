@@ -1,7 +1,7 @@
 # Building a Data Exploration Tool for Geospatial Startups: Utilizing NOAA's NexRad and GOES Satellite Data Sources
 -----
 
-> ✅ Active status <br>
+> 💤 Inactive status <br>
 > [🔗 Application link](https://satellite-data-team-08.streamlit.app/) <br>
 > [🎬 Codelab Slides](https://codelabs-preview.appspot.com/?file_id=13P-uClVhvU06-DsU9b-BeoZrHEp6w9i-1XbBmKHDtEA#0)
 
